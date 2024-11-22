@@ -1,5 +1,5 @@
 # `Model_Based_Reinforcement_Learning_JAX`
-This is a working version of Kurtland Chua's [repo](https://github.com/kchua/mbrl-jax.git). The repo has been modified to work with newer versions `jax` and `gym`, since JAX has [officially stopped supporting `CUDA 11`](https://jax.readthedocs.io/en/latest/changelog.html#jaxlib-0-4-26-april-3-2024). This version works on `CUDA 12`.
+This is a working version of Kurtland Chua's (guy who gave PETS!!! 🙇‍♂️) [repo](https://github.com/kchua/mbrl-jax.git). The repo has been modified to work with newer versions `jax` and `gym`, since JAX has [officially stopped supporting `CUDA 11`](https://jax.readthedocs.io/en/latest/changelog.html#jaxlib-0-4-26-april-3-2024). This version works on `CUDA 12`.
 Currently only implements [PETS](https://arxiv.org/abs/1805.12114), MBPO and a Model-based Policy Agent.
 There aren't many usable implementations of these MBRL algorithms in JAX, which makes this a valuable resource for runnning MBRL experiments using JAX.
 
