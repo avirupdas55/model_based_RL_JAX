@@ -1,19 +1,13 @@
-# `mbrl-jax`
+# `Model_Based_Reinforcement_Learning_JAX`
+This is a working version of Kurtland Chua's [repo](https://github.com/kchua/mbrl-jax.git). The repo has been modified to work with newer versions `jax` and `gym`, since JAX has [officially stopped supporting `CUDA 11`](https://jax.readthedocs.io/en/latest/changelog.html#jaxlib-0-4-26-april-3-2024). This version works on `CUDA 12`.
+Currently only implements [PETS](https://arxiv.org/abs/1805.12114), MBPO and a Model-based Policy Agent.
+There aren't many usable implementations of these MBRL algorithms in JAX, which makes this a valuable resource for runnning MBRL experiments using JAX.
 
-A library intended for running model-based RL experiments, written with JAX.
-Currently only includes a reimplementation of [PETS](https://arxiv.org/abs/1805.12114).
-Other algorithm implementations are planned soon!
-
-**Warning**: This is a work-in-progress, and has not been evaluated on harder environments! Please let me know if you find any bugs.
-
-### TODOs:
-1. Evaluate on harder environments (e.g. HalfCheetah, Ant).
-2. Implement other more recent model-based algorithms.
+**Warning**: This is a work-in-progress, and has not been evaluated on harder environments!
 
 ## Installing Dependencies
 
-A `Dockerfile` with all required dependencies is provided in the `/docker/` folder, together with an accompanying `docker-compose.yml` file.
-Remember to include the appropriate mounts in the docker-compose file as necessary for your needs!
+A `Dockerfile` with all required dependencies is provided in the `/docker/` folder. This is different from the original Dockerfile provided by Kurt, and uses `Python 3.10.12` along with `jax-v0.4.16`, `gym-v0.26.2` and `mujoco_py-v2.1.2.14`. There are some Cython compilation issues with mujoco_py in `singularity` environments running on a `SLURM` system: [#687](https://github.com/openai/mujoco-py/issues/687), [#644](https://github.com/openai/mujoco-py/issues/644). The Dockerfile in this repo uses a [modified version of `mujoco_py`](https://github.com/avirupdas55/mujoco-py) which is compatible with Singularity, run the `docker_build.sh` with appropriate tags. Alternatively use a prebuilt container: `docker pull avirupdas55/jax:kchua`.
 
 ## Running Experiments
 

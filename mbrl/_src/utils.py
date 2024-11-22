@@ -19,20 +19,20 @@ def denormalize(normalizer_params, query):
 
 def rollout(env, discount_factor, agent=None, recording_path=None, evaluation=False):
     observations, actions = [], []
-    observations.append(env.reset())
+    observations.append(env.reset()[0])
 
     recorder = VideoRecorder(env, base_path=recording_path, enabled=(recording_path is not None))
     recorder.capture_frame()
 
     rollout_return, rollout_discounted_return, cur_discount_multiplier = 0., 0., 1.
-    done = False
-    while not done:
+    done, trunc = False, False
+    while True:
         if agent is None:
             ac = env.action_space.sample()
         else:
             ac = agent.act(observations[-1], evaluation=evaluation)
 
-        ob, reward, done, _ = env.step(ac)
+        ob, reward, done, trunc, _ = env.step(ac)
         recorder.capture_frame()
 
         rollout_return += reward
@@ -41,6 +41,9 @@ def rollout(env, discount_factor, agent=None, recording_path=None, evaluation=Fa
 
         observations.append(ob)
         actions.append(ac)
+
+        if done or trunc:
+            break
 
     rollout_statistics = {
         "Return": rollout_return,

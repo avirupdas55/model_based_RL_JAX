@@ -36,8 +36,8 @@ def main(
 ):
     config = importlib.import_module("." + env_to_config[env_name], "mbrl.config").create_config()
 
-    env = gym.make(env_name, **config["env_args"])
-    env.seed(seed)
+    env = gym.make(env_name, render_mode='rgb_array', **config["env_args"])
+    # env.seed(seed)
 
     logging.basicConfig(
         level=logging.INFO,
@@ -54,7 +54,7 @@ def main(
         )
 
     dynamics_model = NeuralNetDynamicsModel(
-        dummy_obs=env.reset(),
+        dummy_obs=env.reset(seed=seed)[0],
         dummy_action=env.action_space.sample(),
         **config["dynamics"],
         **config["preprocessing_functions"]
@@ -88,12 +88,12 @@ def main(
     elif agent_type == "MBPO":
         actor = TanhGaussianPolicy(
             env=env,
-            dummy_obs=env.reset(),
+            dummy_obs=env.reset(seed=seed)[0],
             **config["MBPO_policy"],
             obs_preproc=config["preprocessing_functions"]["obs_preproc"]
         )
         critic = QFunction(
-            dummy_obs=env.reset(),
+            dummy_obs=env.reset(seed=seed)[0],
             dummy_action=env.action_space.sample(),
             **config["MBPO_critic"],
             obs_preproc=config["preprocessing_functions"]["obs_preproc"]
@@ -201,16 +201,27 @@ if __name__ == "__main__":
                         help="Number of rollouts used to evaluate the agent after every iteration.")
     parser.add_argument("-s", type=int, default=-1,
                         help="Random seed.")
-    parser.add_argument("env", choices=["MujocoCartpole-v0", "HalfCheetah-v3"],
-                        help="Environment [MujocoCartpole-v0, HalfCheetah-v3]")
-    parser.add_argument("agent_type", choices=["PETS", "Policy", "MBPO"],
-                        help="Agent type [PETS/Policy]")
+    # parser.add_argument("env", choices=["MujocoCartpole-v0", "HalfCheetah-v3"],
+    #                     help="Environment [MujocoCartpole-v0, HalfCheetah-v3]")
+    # parser.add_argument("agent_type", choices=["PETS", "Policy", "MBPO"],
+    #                     help="Agent type [PETS/Policy]")
     args = parser.parse_args()
 
+    # main(
+    #     args.env,
+    #     args.agent_type,
+    #     logdir=args.logdir,
+    #     save_every=args.save_every,
+    #     keep_all_checkpoints=args.keep_all_checkpoints,
+    #     n_init_trajs=args.n_init_trajs,
+    #     n_iters=args.iters,
+    #     n_eval_runs=args.n_eval_runs,
+    #     seed=args.s if args.s != -1 else onp.random.randint(10000)
+    # )
     main(
-        args.env,
-        args.agent_type,
-        logdir=args.logdir,
+        "HalfCheetah-v3",
+        "MBPO",
+        logdir="logs/",
         save_every=args.save_every,
         keep_all_checkpoints=args.keep_all_checkpoints,
         n_init_trajs=args.n_init_trajs,
